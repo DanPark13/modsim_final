@@ -13,6 +13,7 @@ t_fin = 60;  %1 minutes
 
 init = [D_0, 0];    %initial distance, initial velocity
 
+x_prev_pos = 1.428; %previous position of x value where it lands
 
 options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 10);
 
@@ -20,7 +21,7 @@ options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 10);
 
 % height(length(height),2) = -height(length(height),2);
 
-[time2, height2] = ode45(@rise, [1.428, t_fin], [0, cor*-height1(length(height1), 2)], options);
+[time2, height2] = ode45(@rise, [x_prev_pos, t_fin], [0, cor*-height1(length(height1), 2)], options);
 
 %%%%%%%%%%%%%%% HOW DO WE MAKE THE 1.428 automated?
 
@@ -33,6 +34,9 @@ height = [height1; height2];
         
         dvdt = g;
         dydt = v;
+        
+        %when line = 0, save the x value that hits that x-axis onto a
+        %variable.
         
         res = [dydt; dvdt];
     end
