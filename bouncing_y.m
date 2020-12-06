@@ -5,6 +5,7 @@ function [time, height] = bouncing_y(D_0)
 %parameters
 g = -9.81; % m/s^2
 Radius = 0.001; % meters
+cor = 0.85; %coefficient of restitution - controls how much energy is lost
 
 %simulation parameters
 t_0 = 0;
@@ -13,13 +14,15 @@ t_fin = 60;  %1 minutes
 init = [D_0, 0];    %initial distance, initial velocity
 
 
-endtime = odeset('Events', @event_func, 'RelTol', 1e-5);
+options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 10);
 
-[time1, height1] = ode45(@fall, [t_0, t_fin], init, endtime); 
+[time1, height1] = ode45(@fall, [t_0, t_fin], init, options); 
 
 % height(length(height),2) = -height(length(height),2);
 
-[time2, height2] = ode45(@rise, [t_fin, 120], [0.002, -height1(length(height1))], endtime); 
+[time2, height2] = ode45(@rise, [1.428, t_fin], [0, cor*-height1(length(height1), 2)], options);
+
+%%%%%%%%%%%%%%% HOW DO WE MAKE THE 1.428 automated?
 
 time = [time1;time2];
 height = [height1; height2];
