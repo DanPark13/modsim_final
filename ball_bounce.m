@@ -51,19 +51,22 @@ end
 
 %% Calculated Variables
 
-x_pos_prev = x(end);            % Get position previous of ball
-y_v = y_v * cor;                % Multiply coefficient of resitution to position
-flight_time = 2 * y_v / g;      % First equation (v = u + at --> (v - u)/a = t)
-time_increment = flight_time / 20;   % Time Increment (20 Steps)
-t = 0;
+while y_v > 0.0000001
+    
+    x_pos_prev = x(end);            % Get position previous of ball
+    y_v = y_v * cor;                % Multiply coefficient of resitution to position
+    flight_time = 2 * y_v / g;      % First equation (v = u + at --> (v - u)/a = t)
+    time_increment = flight_time / 20;   % Time Increment (20 Steps)
+    t = 0;
 
 %% Simulation
 
-while t < flight_time
-    t = t + time_increment;
-    
-    if((y_v - 0.5 * g * t) * t >= 0)
-        x(end + 1) = x_v * t + x_pos_prev;
-        y(end + 1) = (y_v - 0.5 * g * t) * t;
+    while t < flight_time
+        t = t + time_increment;
+
+        if((y_v - 0.5 * g * t) * t > -0.0000001)
+            x(end + 1) = x_v * t + x_pos_prev;
+            y(end + 1) = (y_v - 0.5 * g * t) * t;
+        end
     end
 end
