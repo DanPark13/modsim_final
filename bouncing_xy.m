@@ -14,7 +14,7 @@ t_fin = 60*10;  %1 minutes
 
 init = [D_0, 0];    %initial distance, initial velocity
 
-options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 10);
+options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 20);
 
 [time, height] = ode45(@fall, [t_0, t_fin], init, options); 
 
