@@ -1,11 +1,10 @@
-function [distance, height] = bouncing_xy(D_0, VX_0)
+function [distance, height] = bouncing_xy(D_0, VX_0, cor)
 %BOUNCING Summary of this function goes here
 %   Detailed explanation goes here
 
 %parameters
 g = -9.81; % m/s^2
 Radius = 0.001; % meters
-cor = 0.85; %coefficient of restitution - controls how much energy is lost
 distance(1) = 0;
 
 %simulation parameters
@@ -19,7 +18,7 @@ options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 20);
 [time, height] = ode45(@fall, [t_0, t_fin], init, options); 
 
 % height(length(height),2) = -height(length(height),2);
-for jump = 2:20
+for jump = 2:10
     [time2, height2] = ode45(@rise, [time(end), t_fin], [0, cor*-height(end, 2)], options);
     time = [time; time2];
     height = [height; height2];
@@ -30,6 +29,7 @@ end
 for i = 2: length(time)
     distance(end + 1) = VX_0 * time(i);
 end
+
 distance = distance';
     function res = fall(~, U)
         y = U(1);
