@@ -10,7 +10,7 @@ distance(1) = 0;
 
 %simulation parameters
 t_0 = 0;
-t_fin = 60*10;  %1 minutes
+t_fin = 60*10;  %10 minutes
 
 init = [D_0, 0];    %initial distance, initial velocity
 
@@ -19,8 +19,10 @@ options = odeset('Events', @event_func, 'RelTol', 2, "Refine", 20);
 [time, height] = ode45(@fall, [t_0, t_fin], init, options); 
 
 % height(length(height),2) = -height(length(height),2);
-for jump = 2:20
+timeDiff = 1;
+while timeDiff > 0.1
     [time2, height2] = ode45(@rise, [time(end), t_fin], [0, cor*-height(end, 2)], options);
+    timeDiff = time2(end) - time(end);
     time = [time; time2];
     height = [height; height2];
 end
